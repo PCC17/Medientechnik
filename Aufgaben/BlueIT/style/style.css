@@ -1,0 +1,13 @@
+.navLink
+{
+    color: white;
+}
+
+.navLink  :hover
+{
+    color: grey;
+}
+
+body {
+    margin-bottom: 1%;
+}
