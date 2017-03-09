@@ -17,6 +17,11 @@ $user = "root";
 $pass = "";
 $db = new PDO("mysql:host={$host};dbname={$dbname}", $user, $pass);
 
+if(isset($_POST["submit"]))
+{
+    $db->query("UPDATE project SET title ='".$_POST["title"]."', description ='".$_POST["desc"]."', creationDate ='".$_POST["date"]."' WHERE id =".$_POST["id"]);
+}
+
 if(isset($_GET["deleteID"]))
 {
     $db->query("DELETE FROM project WHERE id = ".$_GET["deleteID"]);
@@ -46,10 +51,41 @@ $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
                 echo "<td>{$i}</td>";
             }
             echo'<td><a href="index.php?deleteID='.$t["id"].'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-            <a href=""><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>';
+            <a href="index.php?updateID='.$t["id"].'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>';
             echo "</tr>";
         }
     ?>
+
+    <?php
+        if(isset($_GET["updateID"]))
+        {
+            $res = $db->query("SELECT p.id,p.title,u.username,p.description,p.creationDate, p.state FROM project p JOIN user u ON u.id = p.user_id WHERE p.id =".$_GET["updateID"]);
+            $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
+
+
+            echo "<form action='index.php' method='post'>
+        <div class=\"form-group\">
+            <label for=\"n\">Name</label>
+            <input type=\"text\" class=\"form-control\" name='title' value=\"".$tmp[0]["title"]."\">
+        </div>
+        <div class=\"form-group\">
+            <label for=\"d\">Description</label>
+            <input type=\"text\" class=\"form-control\" name='desc' value=\"".$tmp[0]["description"]."\">
+        </div>
+        <div class=\"form-group\">
+            <label for=\"da\">Date</label>
+            <input type=\"datetime-local\" class=\"form-control\" name='date' value=\"".$tmp[0]["creationDate"]."\">
+        </div>
+        <div class=\"form-group\">
+            <label for=\"u\">Update</label>
+            <input type=\"submit\" class=\"form-control\" name='submit' value=\"Update\">
+            <input type=\"hidden\" name='id' value=\"".$tmp[0]["id"]."\">
+        </div>
+    </form>";
+        }
+    ?>
+
+
 </table>
 </body>
 </html>
