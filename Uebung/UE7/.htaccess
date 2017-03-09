@@ -4,5 +4,6 @@ AuthUserFile .htpasswd
 Require valid-user
 <IfModule mod_rewrite.c>
 RewriteEngine on
+RewriteBase "localhost/HTLMEDT/Uebung/UE7"
 RewriteRule ^(.*)$ index.php [NC,L]
 </IfModule>
