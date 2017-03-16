@@ -26,7 +26,18 @@ if(isset($_GET["deleteID"]))
 {
     $db->query("DELETE FROM project WHERE id = ".$_GET["deleteID"]);
 }
-$res = $db->query("SELECT p.id,p.title,u.username,p.description,p.creationDate, p.state FROM project p JOIN user u ON u.id = p.user_id;");
+if(!isset($_GET['side']))
+{
+    $_GET['side'] = 1;
+}
+$count = 0;
+$statement = "SELECT count(*) FROM project";
+$res = $db->query($statement);
+$tmp = $res->fetchAll(PDO::FETCH_NUM);
+$count = $tmp[0][0];
+echo $count;
+$statement = "SELECT p.id,p.title,u.username,p.description,p.creationDate, p.state FROM project p JOIN user u ON u.id = p.user_id LIMIT ".(($_GET['side']-1) * 20).", 20;";
+$res = $db->query($statement);
 $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -55,13 +66,61 @@ $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
             echo "</tr>";
         }
     ?>
+    <div>
+        <?php
+
+        if(!isset($_GET['side']))
+        {
+            $_GET['side'] = 1;
+        }
+
+        $num1 = 1;
+        $num2 = 1;
+
+        if($_GET['side'] <= 2)
+        {
+            $num1 = 1;
+        }
+        else
+        {
+            $num1 = $_GET['side']-2;
+        }
+
+        if($_GET['side'] <= 1)
+        {
+            $num2 = 1;
+        }
+        else
+        {
+            $num2 = $_GET['side']-1;
+        }
+    
+        echo "<a href = 'index.php?side=" . ($num1) . "&amount=20'><<</a>";
+        echo "  ";
+        echo "<a href = 'index.php?side=" . ($num2) . "&amount=20'><</a>";
+        echo "  ";
+        $offset = 0;
+        if($count % 20 != 0)
+        {
+            $offset = 1;
+        }
+        for($i = 1; $i < $count / 20 + $offset; $i++)
+        {
+            echo "<a href = 'index.php?side=".$i."&amount=20'>".$i." </a>";
+        }
+        echo "  ";
+        echo "<a href = 'index.php?side=".($_GET['side']+1)."&amount=20'>></a>";
+        echo "  ";
+        echo "<a href = 'index.php?side=".($_GET['side']+2)."&amount=20'>>></a>";
+
+        ?>
+    </div>
 
     <?php
         if(isset($_GET["updateID"]))
         {
-            $res = $db->query("SELECT p.id,p.title,u.username,p.description,p.creationDate, p.state FROM project p JOIN user u ON u.id = p.user_id WHERE p.id =".$_GET["updateID"]);
+            $res = $db->query("SELECT p.id,p.title,u.username,p.description,DATE_FORMAT(creationDate, '%Y-%m-%dT%H:%i'), p.state FROM project p JOIN user u ON u.id = p.user_id WHERE p.id =".$_GET["updateID"].";");
             $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
-
 
             echo "<form action='index.php' method='post'>
         <div class=\"form-group\">
@@ -74,7 +133,7 @@ $tmp = $res->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class=\"form-group\">
             <label for=\"da\">Date</label>
-            <input type=\"datetime-local\" class=\"form-control\" name='date' value=\"".$tmp[0]["creationDate"]."\">
+            <input type=\"date\" class=\"form-control\" name='date' value=\"".$tmp[0]["creationDate"]."\">
         </div>
         <div class=\"form-group\">
             <label for=\"u\">Update</label>
