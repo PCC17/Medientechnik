@@ -41,40 +41,61 @@
 
     <body>
     <span id="successMsg" style="background-color:green;" hidden = true>Erfolgreich</span>
-    <table class="table table-bordered">
+    <div id="container">
+        <div class="col-md-offset-1 col-md-10">
+            <h2>Project Trackstar</div>
+        </div>
+        <div class="col-md-offset-1 col-md-10">
+            <table class="table table-bordered maintable">
 
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Creator</th>
-            <th>Description</th>
-            <th>Creation Date</th>
-            <th>State</th>
-            <th>Operations</th>
-        </tr>
-        </thead>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Creator</th>
+                    <th>Description</th>
+                    <th>Creation Date</th>
+                    <th>State</th>
+                    <th>Operations</th>
+                </tr>
+                </thead>
 
-        <?php
-        foreach ($tmp as $t) {
-            echo "<tr id='".$t['id']."'>";
-            foreach ($t as $i) {
-                echo "<td>{$i}</td>";
-            }
-            echo'
-            <td>
-            <span data-pid="'.$t['id'].'" class="glyphicon glyphicon-trash trashicon" aria-hidden="true"></span>
-            <span data-pid="'.$t['id'].'" class="glyphicon glyphicon-pencil editicon" aria-hidden="true"></span>
-            </td>';
-            echo "</tr>";
-        }
-        ?>
-        <div>
-
-
-
-    </table>
+                <?php
+                foreach ($tmp as $t) {
+                    echo "<tr id='".$t['id']."'>";
+                    foreach ($t as $i) {
+                        echo "<td>{$i}</td>";
+                    }
+                    echo'
+                    <td>
+                    <span data-pid="'.$t['id'].'" class="glyphicon glyphicon-trash trashicon" aria-hidden="true"></span>
+                    <span data-pid="'.$t['id'].'" class="glyphicon glyphicon-pencil editicon" aria-hidden="true"></span>
+                    </td>';
+                    echo "</tr>";
+                }
+                ?>
+        </table>
+        </div>
+    <div>
     </body>
 </html>
-
+<div id="delete-dialog" class="modal fade">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Projekt löschen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Sind Sie sichs sicher, dass Sie das Projekt löschen wollen?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="delete-project-button" type="button" class="btn btn-primary">Löschen</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+</div>
  <script src="js/main.js"></script>

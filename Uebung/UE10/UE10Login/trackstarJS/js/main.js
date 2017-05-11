@@ -1,9 +1,7 @@
 $(document).ready( function () {
     $(".trashicon").click(function() {
-        $("#delete-dialog").modal("show");   
-    });
-    $("#delete-project-button").click(function() {
-        
+        if(confirm("Wollen sie wirklich löschen?"))
+        {
             //Kommunikation mit Server aufnehmen um ihm mitzuteilen dass der Datensatz gelöscht werden soll
             var myAjaxConfig = {
                 method: "POST",
@@ -11,15 +9,11 @@ $(document).ready( function () {
                 data: "deletePID="+ $(this).parent().parent().attr("id"),
                 //data: {deletePID: $(this).attr("data-pid")},
                 success: function(response){
-                    if(response != "-1")
+                    if(response != "false")
                     {
                         var str = "#"+ response;
                         $(str).remove();
                         $("#successMsg").fadeIn(1500, function(){$("#successMsg").fadeOut(1500)});
-                    }
-                    else
-                    {
-                        console.log("Something went wrong");
                     }
                 },
                 error: function(response){
@@ -27,7 +21,10 @@ $(document).ready( function () {
                 }
             };
             $.ajax(myAjaxConfig);
-$("#delete-dialog").modal("hide"); 
+        }
+        else
+            console.log("abgebrochen" +$(this).attr("data-pid"));
+
     });
     $(".editicon").click(function() {
         if(confirm("Wollen sie wirklich editieren?"))
